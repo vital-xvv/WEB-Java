@@ -2,6 +2,7 @@ package com.company.models;
 
 public class Patient {
 
+    private int id;
     private String firstName;
     private String lastName;
     private String diagnosis;
@@ -11,6 +12,16 @@ public class Patient {
     private String procedures;
     private String operations;
     private boolean discharge;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
 
     public String getFirstName() {
         return firstName;
@@ -82,5 +93,21 @@ public class Patient {
 
     public void setDischarge(boolean discharge) {
         this.discharge = discharge;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", diagnosis='" + diagnosis + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", doctorId=" + doctorId +
+                ", pills='" + pills + '\'' +
+                ", procedures='" + procedures + '\'' +
+                ", operations='" + operations + '\'' +
+                ", discharge=" + discharge +
+                '}';
     }
 }

@@ -1,25 +1,20 @@
 package com.company;
 
-import com.company.DAO.AdministratorDAO;
+import com.company.controllers.AdministratorController;
+import com.company.controllers.DoctorController;
 import com.company.models.Doctor;
 import com.company.models.Patient;
 
 public class Main {
 
     public static void main(String[] args) {
-        AdministratorDAO admin = new AdministratorDAO();
+
+        AdministratorController administratorController = new AdministratorController();
+        DoctorController doctorController = new DoctorController();
 
 
-//        Doctor doc = new Doctor();
-//        doc.setFirstName("Steven");
-//        doc.setLastName("Phillips");
-//        doc.setCategory("dentist");
-//        admin.addDoctor(doc);
-//        admin.setDischarge(1, true);
-
-        admin.listOfTherapists();
-        admin.listOfPatients("birth");
-
+        doctorController.assignMedicaments(3, "Hot tea with mint");
+        administratorController.seeAllPatiens("date_of_birth");
 
     }
 }
