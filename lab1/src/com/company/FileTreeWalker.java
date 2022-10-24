@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 public class FileTreeWalker {
 
-    private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
     public final String dirName;
 
     public FileTreeWalker(String dirName) {
@@ -34,7 +34,7 @@ public class FileTreeWalker {
                         }
                     }
                 }catch (Exception e) {
-                    return;
+                    System.err.println("Directory is empty");
                 }
 
 
