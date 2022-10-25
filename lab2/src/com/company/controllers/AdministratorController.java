@@ -10,6 +10,16 @@ import java.util.List;
 public class AdministratorController {
 
     private static final AdministratorDAO administratorDAO = new AdministratorDAO();
+    private static AdministratorController admin;
+
+    public static AdministratorController getAdministratorController() {
+        if(admin == null) return new AdministratorController();
+        return admin;
+    }
+
+    private AdministratorController() {
+
+    }
 
 
     public void registerNewPatient(Patient patient) {

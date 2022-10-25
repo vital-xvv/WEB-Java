@@ -9,8 +9,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        AdministratorController administratorController = new AdministratorController();
-        DoctorController doctorController = new DoctorController();
+        AdministratorController administratorController = AdministratorController.getAdministratorController();
+        DoctorController doctorController = DoctorController.getDoctorController();
 
 
         doctorController.assignMedicaments(3, "Hot tea with mint");

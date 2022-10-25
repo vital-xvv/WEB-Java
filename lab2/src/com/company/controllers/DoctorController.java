@@ -5,6 +5,17 @@ import com.company.DAO.DoctorDAO;
 public class DoctorController extends NurseController {
 
     private static final DoctorDAO doctorDAO = new DoctorDAO();
+    private static DoctorController doctorController;
+
+    public static DoctorController getDoctorController(){
+        if(doctorController==null) return new DoctorController();
+        return doctorController;
+    }
+
+    private DoctorController(){
+
+    }
+
 
     public void defineDiagnosis(int patientID, String diagnosis){
         doctorDAO.defineDiagnosis(patientID, diagnosis);

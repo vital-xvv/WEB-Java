@@ -5,6 +5,16 @@ import com.company.DAO.NurseDAO;
 public class NurseController {
 
     private static final NurseDAO nurseDAO = new NurseDAO();
+    private static NurseController nurseController;
+
+    private NurseController(){
+
+    }
+
+    public static NurseController getNurseController(){
+        if(nurseController== null) return new NurseController();
+        return nurseController;
+    }
 
     public void assignMedicaments(int patientID, String medicaments){
         nurseDAO.definePills(patientID, medicaments);
