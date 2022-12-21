@@ -14,9 +14,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DischargePatientServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO");
         int patientId = Integer.parseInt(req.getParameter("id"));
-        ((AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO")).get()
-                .setDischarge(patientId, true);
+        adminDAO.get().setDischarge(patientId, true);
         req.getRequestDispatcher("/WEB-INF/views/admin_menu.jsp").forward(req, resp);
     }
 }

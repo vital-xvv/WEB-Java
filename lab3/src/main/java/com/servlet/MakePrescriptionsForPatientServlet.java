@@ -18,17 +18,17 @@ import java.util.concurrent.atomic.AtomicReference;
 @WebServlet("/change/patient/prescripts")
 public class MakePrescriptionsForPatientServlet extends HttpServlet {
 
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO");
         if(req.getSession().getAttribute("role").equals(Role.DOCTOR)) {
-            Doctor doctor = ((AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO")).get().findDoctorByUsername((String)req.getSession().getAttribute("login"));
-            List<Patient> patientList = ((AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO")).get().getPatientsOfExactDoctor(doctor.getId());
+            Doctor doctor = adminDAO.get().findDoctorByUsername((String)req.getSession().getAttribute("login"));
+            List<Patient> patientList = adminDAO.get().getPatientsOfExactDoctor(doctor.getId());
             req.setAttribute("patients", patientList);
             req.getRequestDispatcher("/WEB-INF/views/doctor_menu.jsp").forward(req, resp);}
-        if(req.getSession().getAttribute("role").equals(Role.NURSE)){
-            Nurse nurse = ((AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO")).get().findNurseByUsername((String)req.getSession().getAttribute("login"));
-            List<Patient> patientList = ((AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO")).get().getPatientsOfExactNurse(nurse.getId());
+        else if(req.getSession().getAttribute("role").equals(Role.NURSE)){
+            Nurse nurse = adminDAO.get().findNurseByUsername((String)req.getSession().getAttribute("login"));
+            List<Patient> patientList = adminDAO.get().getPatientsOfExactNurse(nurse.getId());
             req.setAttribute("patients", patientList);
             req.getRequestDispatcher("/WEB-INF/views/nurse_menu.jsp").forward(req, resp);
         }
@@ -38,11 +38,11 @@ public class MakePrescriptionsForPatientServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final int id = Integer.parseInt(req.getParameter("id"));
+        AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO");
         String diagnosis  = req.getParameter("diagnosis");
         String pills  = req.getParameter("pills");
         String procedures  = req.getParameter("procedures");
         String operations  = req.getParameter("operations");
-        final AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO");
         adminDAO.get().updatePrescriptions(id, diagnosis, pills, procedures, operations);
         doGet(req, resp);
     }

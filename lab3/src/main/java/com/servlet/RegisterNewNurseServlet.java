@@ -1,7 +1,6 @@
 package com.servlet;
 
 import com.DAO.AdministratorDAO;
-import com.models.Doctor;
 import com.models.Nurse;
 
 import javax.servlet.ServletException;

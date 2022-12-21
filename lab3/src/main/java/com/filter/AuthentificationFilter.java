@@ -19,6 +19,7 @@ public class AuthentificationFilter implements Filter {
 
     private String login;
     private String password;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -62,24 +63,25 @@ public class AuthentificationFilter implements Filter {
     private void moveToMenu(final HttpServletRequest request, final HttpServletResponse response, Role role)
             throws ServletException, IOException {
 
+        AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO");
 
         if (role.equals(Role.ADMIN)) {
 
-            request.setAttribute("doctors", ((AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO")).get().listOfTherapists());
-            request.setAttribute("patients", ((AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO")).get().listOfPatients());
+            request.setAttribute("doctors", adminDAO.get().listOfTherapists());
+            request.setAttribute("patients", adminDAO.get().listOfPatients());
 
             request.getRequestDispatcher("/WEB-INF/views/admin_menu.jsp").forward(request, response);
 
         } else if (role.equals(Role.DOCTOR)) {
-            Doctor doctor = ((AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO")).get().findDoctorByUsername(login);
-            List<Patient> patientList = ((AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO")).get().getPatientsOfExactDoctor(doctor.getId());
+            Doctor doctor = adminDAO.get().findDoctorByUsername(login);
+            List<Patient> patientList = adminDAO.get().getPatientsOfExactDoctor(doctor.getId());
             request.setAttribute("patients", patientList);
             request.getRequestDispatcher("/WEB-INF/views/doctor_menu.jsp").forward(request, response);
 
         }
         else if (role.equals(Role.NURSE)) {
-            Nurse nurse = ((AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO")).get().findNurseByUsername((String)request.getSession().getAttribute("login"));
-            List<Patient> patientList = ((AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO")).get().getPatientsOfExactNurse(nurse.getId());
+            Nurse nurse = adminDAO.get().findNurseByUsername((String)request.getSession().getAttribute("login"));
+            List<Patient> patientList = adminDAO.get().getPatientsOfExactNurse(nurse.getId());
             request.setAttribute("patients", patientList);
             request.getRequestDispatcher("/WEB-INF/views/nurse_menu.jsp").forward(request, response);
 
