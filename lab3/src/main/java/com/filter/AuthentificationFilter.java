@@ -2,6 +2,7 @@ package com.filter;
 
 import com.DAO.AdministratorDAO;
 import com.DAO.UserDAO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.models.*;
 
 import javax.servlet.*;
@@ -10,7 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.nonNull;
@@ -43,7 +47,7 @@ public class AuthentificationFilter implements Filter {
             Role role = (Role)session.getAttribute("role");
             moveToMenu(request, response, role);
 
-        } else if(userDAO.get().getUserByLoginAndPassword(login, password).getLogin() != null) {
+        }else if(userDAO.get().getUserByLoginAndPassword(login, password).getLogin() != null) {
 
             User user = userDAO.get().getUserByLoginAndPassword(login, password);
             request.getSession().setAttribute("login", login);
@@ -52,9 +56,18 @@ public class AuthentificationFilter implements Filter {
 
             moveToMenu(request, response, user.getRole());
 
-        } else {
-
-            moveToMenu(request, response, Role.UNKNOWN);
+        }
+        else {
+            if(nonNull(login) && nonNull(password)) {
+                response.setContentType("application/json");
+                Map<String, String> error = new HashMap<>();
+                error.put("status", "403");
+                error.put("issuer", "Login failure");
+                error.put("status_info", "FORBIDDEN");
+                error.put("timestamp", LocalDateTime.now().toString());
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            }
+            else moveToMenu(request, response, Role.UNKNOWN);
 
         }
 

@@ -13,182 +13,42 @@ import java.util.List;
 
 public class AdministratorDAO extends DAO{
 
-    public List<Doctor> listOfTherapists() {
-        List<Doctor> doctors = new ArrayList<>();
+    private Doctor doctorMapper(ResultSet result){
+        Doctor doctor = new Doctor();
         try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM doctor";
-            ResultSet result = statement.executeQuery(SQL);
-            while(result.next()) {
-                Doctor doctor = new Doctor();
-                doctor.setId(result.getInt("id"));
-                doctor.setFirstName(result.getString("first_name"));
-                doctor.setLastName(result.getString("last_name"));
-                doctor.setCategory(result.getString("category"));
-                doctor.setAmountOfPatients(result.getInt("amount_of_patients"));
-                doctor.setUsername(result.getString("username"));
-                doctors.add(doctor);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            doctor.setId(result.getInt("id"));
+            doctor.setFirstName(result.getString("first_name"));
+            doctor.setLastName(result.getString("last_name"));
+            doctor.setCategory(result.getString("category"));
+            doctor.setAmountOfPatients(result.getInt("amount_of_patients"));
+            doctor.setUsername(result.getString("username"));
         }
-        return doctors;
+        catch (SQLException throwables) {
+                throwables.printStackTrace();
+        }
+        return doctor;
     }
 
 
-
-    public List<Doctor> listOfTherapists(String orderBy) {
-        List<Doctor> doctors = new ArrayList<>();
+    private Nurse nurseMapper(ResultSet result){
+        Nurse nurse = new Nurse();
         try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM doctor ORDER BY " + orderBy;
-            ResultSet result = statement.executeQuery(SQL);
-            while(result.next()) {
-                Doctor doctor = new Doctor();
-                doctor.setId(result.getInt("id"));
-                doctor.setFirstName(result.getString("first_name"));
-                doctor.setLastName(result.getString("last_name"));
-                doctor.setCategory(result.getString("category"));
-                doctor.setAmountOfPatients(result.getInt("amount_of_patients"));
-                doctor.setUsername(result.getString("username"));
-                doctors.add(doctor);
-            }
-        } catch (SQLException throwables) {
+            nurse.setId(result.getInt("id"));
+            nurse.setFirstName(result.getString("first_name"));
+            nurse.setLastName(result.getString("last_name"));
+            nurse.setSpecialization(result.getString("specialization"));
+            nurse.setUsername(result.getString("username"));
+        }
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return doctors;
+        return nurse;
     }
 
-    public List<Nurse> listOfNurses() {
-        List<Nurse> nurses = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM nurse";
-            ResultSet result = statement.executeQuery(SQL);
-            while(result.next()) {
-                Nurse nurse = new Nurse();
-                nurse.setId(result.getInt("id"));
-                nurse.setFirstName(result.getString("first_name"));
-                nurse.setLastName(result.getString("last_name"));
-                nurse.setSpecialization(result.getString("specialization"));
-                nurse.setUsername(result.getString("username"));
-                nurses.add(nurse);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return nurses;
-    }
 
-    public List<Doctor> listOfTherapistsByCategory(String filterByCategory) {
-        List<Doctor> doctors = new ArrayList<>();
+    private Patient patientMapper(ResultSet result){
+        Patient patient = new Patient();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM doctor WHERE category=?");
-            statement.setString(1, filterByCategory);
-            ResultSet result = statement.executeQuery();
-            while(result.next()) {
-                Doctor doctor = new Doctor();
-                doctor.setId(result.getInt("id"));
-                doctor.setFirstName(result.getString("first_name"));
-                doctor.setLastName(result.getString("last_name"));
-                doctor.setCategory(result.getString("category"));
-                doctor.setAmountOfPatients(result.getInt("amount_of_patients"));
-                doctor.setUsername(result.getString("username"));
-                doctors.add(doctor);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return doctors;
-    }
-
-    public List<Patient> listOfPatients() {
-        List<Patient> patients = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM patient";
-            ResultSet result = statement.executeQuery(SQL);
-            while(result.next()) {
-                Patient patient = new Patient();
-                patient.setId(result.getInt("id"));
-                patient.setDateOfBirth(result.getString("date_of_birth"));
-                patient.setFirstName(result.getString("first_name"));
-                patient.setLastName(result.getString("last_name"));
-                patient.setDischarge(result.getBoolean("discharge"));
-                patient.setDiagnosis(result.getString("diagnosis"));
-                patient.setPills(result.getString("pills"));
-                patient.setOperations(result.getString("operations"));
-                patient.setProcedures(result.getString("procedures"));
-                patient.setDoctorId(result.getInt("doctor_id"));
-                patient.setNurseId(result.getInt("nurse_id"));
-                patients.add(patient);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return patients;
-    }
-
-    public List<Patient> listOfPatients(String orderBy) {
-        List<Patient> patients = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM patient ORDER BY " + orderBy;
-            ResultSet result = statement.executeQuery(SQL);
-            while(result.next()) {
-                Patient patient = new Patient();
-                patient.setId(result.getInt("id"));
-                patient.setDateOfBirth(result.getString("date_of_birth"));
-                patient.setFirstName(result.getString("first_name"));
-                patient.setLastName(result.getString("last_name"));
-                patient.setDischarge(result.getBoolean("discharge"));
-                patient.setDiagnosis(result.getString("diagnosis"));
-                patient.setPills(result.getString("pills"));
-                patient.setOperations(result.getString("operations"));
-                patient.setProcedures(result.getString("procedures"));
-                patient.setDoctorId(result.getInt("doctor_id"));
-                patient.setNurseId(result.getInt("nurse_id"));
-                patients.add(patient);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return patients;
-    }
-
-    public List<Patient> getPatientsOfExactDoctor(int doctorId) {
-        List<Patient> patients = new ArrayList<>();
-        try {
-            PreparedStatement statement= connection.prepareStatement("SELECT * FROM patient WHERE doctor_id=?");
-            statement.setInt(1, doctorId);
-            ResultSet result = statement.executeQuery();
-            while(result.next()) {
-                Patient patient = new Patient();
-                patient.setId(result.getInt("id"));
-                patient.setDateOfBirth(result.getString("date_of_birth"));
-                patient.setFirstName(result.getString("first_name"));
-                patient.setLastName(result.getString("last_name"));
-                patient.setDischarge(result.getBoolean("discharge"));
-                patient.setDiagnosis(result.getString("diagnosis"));
-                patient.setPills(result.getString("pills"));
-                patient.setOperations(result.getString("operations"));
-                patient.setProcedures(result.getString("procedures"));
-                patient.setDoctorId(result.getInt("doctor_id"));
-                patient.setNurseId(result.getInt("nurse_id"));
-                patients.add(patient);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return patients;
-    }
-    public Patient findPatientById(int id) {
-        try {
-            PreparedStatement statement= connection.prepareStatement("SELECT * FROM patient WHERE id=?");
-            statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            Patient patient = new Patient();
-            result.next();
             patient.setId(result.getInt("id"));
             patient.setDateOfBirth(result.getString("date_of_birth"));
             patient.setFirstName(result.getString("first_name"));
@@ -200,30 +60,149 @@ public class AdministratorDAO extends DAO{
             patient.setProcedures(result.getString("procedures"));
             patient.setDoctorId(result.getInt("doctor_id"));
             patient.setNurseId(result.getInt("nurse_id"));
-            return patient;
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return patient;
+    }
+
+
+    public List<Doctor> listOfTherapists() {
+        List<Doctor> doctors = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM doctor");
+            while(result.next()) {
+                doctors.add(doctorMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return doctors;
+    }
+
+
+    public List<Doctor> listOfTherapists(String orderBy) {
+        List<Doctor> doctors = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            String SQL = "SELECT * FROM doctor ORDER BY " + orderBy;
+            ResultSet result = statement.executeQuery(SQL);
+            while(result.next()) {
+                doctors.add(doctorMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return doctors;
+    }
+
+
+    public List<Nurse> listOfNurses() {
+        List<Nurse> nurses = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            String SQL = "SELECT * FROM nurse";
+            ResultSet result = statement.executeQuery(SQL);
+            while(result.next()) {
+                nurses.add(nurseMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return nurses;
+    }
+
+
+    public List<Doctor> listOfTherapistsByCategory(String filterByCategory) {
+        List<Doctor> doctors = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM doctor WHERE category=?");
+            statement.setString(1, filterByCategory);
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                doctors.add(doctorMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return doctors;
+    }
+
+
+    public List<Patient> listOfPatients() {
+        List<Patient> patients = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM patient");
+            while(result.next()) {
+                patients.add(patientMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return patients;
+    }
+
+
+    public List<Patient> listOfPatients(String orderBy) {
+        List<Patient> patients = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            String SQL = "SELECT * FROM patient ORDER BY " + orderBy;
+            ResultSet result = statement.executeQuery(SQL);
+            while(result.next()) {
+                patients.add(patientMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return patients;
+    }
+
+
+    public List<Patient> getPatientsOfExactDoctor(int doctorId) {
+        List<Patient> patients = new ArrayList<>();
+        try {
+            PreparedStatement statement= connection.prepareStatement("SELECT * FROM patient WHERE doctor_id=?");
+            statement.setInt(1, doctorId);
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                patients.add(patientMapper(result));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return patients;
+    }
+
+
+    public Patient findPatientById(int id) {
+        try {
+            PreparedStatement statement= connection.prepareStatement("SELECT * FROM patient WHERE id=?");
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            result.next();
+            return patientMapper(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public Doctor findDoctorByUsername(String username) {
         try {
             PreparedStatement statement= connection.prepareStatement("SELECT * FROM doctor WHERE username=?");
             statement.setString(1, username);
             ResultSet result = statement.executeQuery();
-            Doctor doctor = new Doctor();
             result.next();
-            doctor.setId(result.getInt("id"));
-            doctor.setFirstName(result.getString("first_name"));
-            doctor.setLastName(result.getString("last_name"));
-            doctor.setCategory(result.getString("category"));
-            doctor.setAmountOfPatients(result.getInt("amount_of_patients"));
-            doctor.setUsername(result.getString("username"));
-            return doctor;
+            return doctorMapper(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public void updatePrescriptions(int patientId, String diagnosis, String pills, String procedures, String operations) {
         try {
@@ -235,7 +214,6 @@ public class AdministratorDAO extends DAO{
             statement.setString(4,operations);
             statement.setInt(5, patientId);
             statement.executeUpdate();
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -254,8 +232,10 @@ public class AdministratorDAO extends DAO{
         }
     }
 
+
     public void assignDoctorToPatient(int patientId, int doctorId) {
         try {
+            connection.setAutoCommit(false);
             Patient patient = findPatientById(patientId);
             PreparedStatement statement3 = connection.prepareStatement("UPDATE doctor SET amount_of_patients=amount_of_patients-1 WHERE NOT amount_of_patients=0 AND id=?");
             statement3.setInt(1, patient.getDoctorId());
@@ -267,10 +247,17 @@ public class AdministratorDAO extends DAO{
             PreparedStatement statement2 = connection.prepareStatement("UPDATE doctor SET amount_of_patients=amount_of_patients+1 WHERE id=?");
             statement2.setInt(1, doctorId);
             statement2.executeUpdate();
+            connection.commit();
         } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             throwables.printStackTrace();
         }
     }
+
 
     public void assignNurseToPatient(int patientId, int nurseId) {
         try {
@@ -283,8 +270,10 @@ public class AdministratorDAO extends DAO{
         }
     }
 
+
     public void addDoctor(Doctor doctor){
         try {
+            connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO doctor (first_name, last_name, category, username) VALUES (?,?,?,?)");
             statement.setString(1, doctor.getFirstName());
             statement.setString(2, doctor.getLastName());
@@ -296,10 +285,17 @@ public class AdministratorDAO extends DAO{
             statement2.setString(2, "1111");
             statement2.setString(3, "DOCTOR");
             statement2.executeUpdate();
+            connection.commit();
         } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             throwables.printStackTrace();
         }
     }
+
 
     public void addNurse(Nurse nurse){
         try {
@@ -314,19 +310,28 @@ public class AdministratorDAO extends DAO{
         }
     }
 
-    public void addAndRegisterNurse(Nurse nurse) {
-        addNurse(nurse);
+
+    public void addAndRegisterNurse(Nurse nurse){
         try {
+            connection.setAutoCommit(false);
+            addNurse(nurse);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO user (login, password, role) VALUES (?,?,?)");
             statement.setString(1, nurse.getUsername());
             statement.setString(2, "1111");
             statement.setString(3, "NURSE");
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             throwables.printStackTrace();
         }
 
     }
+
 
     public int setDischarge(int patientId, boolean discharge) {
         int truth = 1;
@@ -334,7 +339,7 @@ public class AdministratorDAO extends DAO{
             PreparedStatement statement = connection.prepareStatement("UPDATE patient SET discharge=? WHERE (id=?) AND (diagnosis IS NOT NULL)");
             statement.setBoolean(1, discharge);
             statement.setInt(2, patientId);
-            truth = statement.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -343,22 +348,17 @@ public class AdministratorDAO extends DAO{
 
 
     public Nurse findNurseByUsername(String login) {
-
         try {
             PreparedStatement statement= connection.prepareStatement("SELECT * FROM nurse WHERE username=?");
             statement.setString(1, login);
             ResultSet result = statement.executeQuery();
-            Nurse nurse = new Nurse();
             result.next();
-            nurse.setId(result.getInt("id"));
-            nurse.setFirstName(result.getString("first_name"));
-            nurse.setLastName(result.getString("specialization"));
-            nurse.setUsername(result.getString("username"));
-            return nurse;
+            return nurseMapper(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public List<Patient> getPatientsOfExactNurse(int id) {
         List<Patient> patients = new ArrayList<>();
@@ -366,23 +366,13 @@ public class AdministratorDAO extends DAO{
             PreparedStatement statement= connection.prepareStatement("SELECT * FROM patient WHERE nurse_id=?");
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
-            while(result.next()) {
-                Patient patient = new Patient();
-                patient.setId(result.getInt("id"));
-                patient.setDateOfBirth(result.getString("date_of_birth"));
-                patient.setFirstName(result.getString("first_name"));
-                patient.setLastName(result.getString("last_name"));
-                patient.setDischarge(result.getBoolean("discharge"));
-                patient.setDiagnosis(result.getString("diagnosis"));
-                patient.setPills(result.getString("pills"));
-                patient.setOperations(result.getString("operations"));
-                patient.setProcedures(result.getString("procedures"));
-                patient.setNurseId(result.getInt("nurse_id"));
-                patients.add(patient);
+            while (result.next()) {
+                patients.add(patientMapper(result));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return patients;
     }
+
 }

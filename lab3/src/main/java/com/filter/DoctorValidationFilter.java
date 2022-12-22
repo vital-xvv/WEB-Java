@@ -8,6 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @WebFilter("/new/doctor/create")
 public class DoctorValidationFilter implements Filter {
@@ -26,19 +32,34 @@ public class DoctorValidationFilter implements Filter {
         String lastName  = req.getParameter("lastName");
         String category  = req.getParameter("category");
         String username  = req.getParameter("username");
-        resp.setContentType("text/html");
-        PrintWriter writer = resp.getWriter();
+        resp.setContentType("application/json");
+        Map<String, String> error = new HashMap<>();
+        error.put("status", "406");
+        error.put("issuer", "Doctor form info Validation");
+        error.put("status_info", "NOT_ACCEPTABLE");
         if(!Util.firstOrLastNameIsValid(firstName)){
-            writer.println("<center><h1>First name input is invalid</h1></center>");
+            resp.setStatus(406);
+            error.put("error_message", "firstName is invalid");
+            error.put("timestamp", LocalDateTime.now().toString());
+            new ObjectMapper().writeValue(resp.getOutputStream(), error);
         }
         else if(!Util.firstOrLastNameIsValid(lastName)){
-            writer.println("<center><h1>Last name input is invalid</h1></center>");
+            resp.setStatus(406);
+            error.put("error_message", "lastName is invalid");
+            error.put("timestamp", LocalDateTime.now().toString());
+            new ObjectMapper().writeValue(resp.getOutputStream(), error);
         }
         else if(!Util.categoryIsValid(category)){
-            writer.println("<center><h1>Doctor category is invalid</h1></center>");
+            resp.setStatus(406);
+            error.put("error_message", "category is invalid");
+            error.put("timestamp", LocalDateTime.now().toString());
+            new ObjectMapper().writeValue(resp.getOutputStream(), error);
         }
         else if(!Util.usernameIsValid(username) && !Util.emailIsValid(username)){
-            writer.println("<center><h1>Username is invalid</h1></center>");
+            resp.setStatus(406);
+            error.put("error_message", "username is invalid");
+            error.put("timestamp", LocalDateTime.now().toString());
+            new ObjectMapper().writeValue(resp.getOutputStream(), error);
         }
         else {
             filterChain.doFilter(req, resp);
