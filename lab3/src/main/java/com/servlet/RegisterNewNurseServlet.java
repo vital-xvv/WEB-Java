@@ -18,21 +18,4 @@ public class RegisterNewNurseServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/nurse_form.jsp").forward(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String firstName  = request.getParameter("firstName");
-        String lastName  = request.getParameter("lastName");
-        String specialization  = request.getParameter("specialization");
-        String username  = request.getParameter("username");
-
-        Nurse nurse = new Nurse(firstName, lastName, specialization, username);
-
-        final AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO");
-
-        adminDAO.get().addAndRegisterNurse(nurse);
-
-        response.sendRedirect("/");
-
-
-    }
 }

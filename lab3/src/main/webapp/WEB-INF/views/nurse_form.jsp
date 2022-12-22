@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>Register a new nurse</h1>
-<form action="/new/nurse" method="POST">
+<form action="/new/nurse/create" method="POST">
     <div><input name="firstName" type="text" required placeholder="First name: "></div>
     <div><input name="lastName" type="text" required placeholder="Last Name: "></div>
     <div><input name="specialization" type="text" required placeholder="Specialization: "></div>

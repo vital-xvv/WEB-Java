@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>Register a new patient</h1>
-<form action="/new/patient" method="POST">
+<form action="/new/patient/create" method="POST">
     <div><input name="firstName" type="text" required placeholder="First name: "></div>
     <div><input name="lastName" type="text" required placeholder="Last Name: "></div>
     <div><input name="dateOfBirth" type="date" required placeholder="Date of birth: "></div>
