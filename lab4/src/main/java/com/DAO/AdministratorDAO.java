@@ -333,17 +333,15 @@ public class AdministratorDAO extends DAO{
     }
 
 
-    public int setDischarge(int patientId, boolean discharge) {
-        int truth = 1;
+    public void setDischarge(int patientId, boolean discharge) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE patient SET discharge=? WHERE (id=?) AND (diagnosis IS NOT NULL)");
+            PreparedStatement statement = connection.prepareStatement("UPDATE patient SET discharge=? WHERE id=?");
             statement.setBoolean(1, discharge);
             statement.setInt(2, patientId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return truth;
     }
 
 

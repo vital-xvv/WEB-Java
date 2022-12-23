@@ -80,7 +80,7 @@
                         <p>
                             Discharge:
                             <c:if test="${patient.discharge eq true}">
-                                <c:out value="discharged"/>
+                                <c:out value="Discharged"/>
                             </c:if>
                             <c:if test="${patient.discharge eq false}">
                                 <c:out value="Not discharged"/>

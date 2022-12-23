@@ -73,7 +73,7 @@ public class AuthentificationFilter implements Filter {
 
     }
 
-    private void moveToMenu(final HttpServletRequest request, final HttpServletResponse response, Role role)
+    public void moveToMenu(final HttpServletRequest request, final HttpServletResponse response, Role role)
             throws ServletException, IOException {
 
         AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) request.getServletContext().getAttribute("administratorDAO");

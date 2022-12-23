@@ -7,6 +7,12 @@ public class Doctor {
         this.category = category;
     }
 
+    public Doctor(int id , String firstName, String lastName, String category) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.category = category;
+    }
     public Doctor() {
     }
 

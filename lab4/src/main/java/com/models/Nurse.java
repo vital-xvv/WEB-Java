@@ -16,6 +16,14 @@ public class Nurse {
         this.username = username;
     }
 
+    public Nurse(int id, String firstName, String lastName, String specialization, String username) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.specialization = specialization;
+        this.username = username;
+    }
+
     public Nurse() {
 
     }

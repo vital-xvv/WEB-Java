@@ -38,5 +38,10 @@ public class ContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
+        userDAO = null;
+        nurseDAO = null;
+        doctorDAO = null;
+        administratorDAO = null;
+
     }
 }

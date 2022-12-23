@@ -42,7 +42,7 @@ public class NurseValidationFilter implements Filter {
         }
         else if(!Util.firstOrLastNameIsValid(lastName)){
             resp.setStatus(406);
-            error.put("error_message", "firstName is invalid");
+            error.put("error_message", "lastName is invalid");
             error.put("timestamp", LocalDateTime.now().toString());
             new ObjectMapper().writeValue(resp.getOutputStream(), error);
         }

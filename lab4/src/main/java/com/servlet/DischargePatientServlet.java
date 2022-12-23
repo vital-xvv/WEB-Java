@@ -17,6 +17,6 @@ public class DischargePatientServlet extends HttpServlet {
         AtomicReference<AdministratorDAO> adminDAO = (AtomicReference<AdministratorDAO>) req.getServletContext().getAttribute("administratorDAO");
         int patientId = Integer.parseInt(req.getParameter("id"));
         adminDAO.get().setDischarge(patientId, true);
-        req.getRequestDispatcher("/WEB-INF/views/admin_menu.jsp").forward(req, resp);
+        resp.sendRedirect("/");
     }
 }
