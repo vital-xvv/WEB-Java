@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 import static java.util.Objects.nonNull;
 @WebFilter("/")
@@ -23,6 +24,8 @@ public class AuthentificationFilter implements Filter {
 
     private String login;
     private String password;
+
+    private final Logger logs = Logger.getLogger(AuthentificationFilter.class.getName());
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -45,7 +48,9 @@ public class AuthentificationFilter implements Filter {
         if(nonNull(session) && nonNull(session.getAttribute("login")) && nonNull(session.getAttribute("password"))){
 
             Role role = (Role)session.getAttribute("role");
+            logs.info("\nUser" + " " + session.getAttribute("login") + " has been authorized");
             moveToMenu(request, response, role);
+
 
         }else if(userDAO.get().getUserByLoginAndPassword(login, password).getLogin() != null) {
 
@@ -53,7 +58,7 @@ public class AuthentificationFilter implements Filter {
             request.getSession().setAttribute("login", login);
             request.getSession().setAttribute("password", password);
             request.getSession().setAttribute("role", user.getRole());
-
+            logs.info("\nUser " + login + " has been authenticated and authorized.");
             moveToMenu(request, response, user.getRole());
 
         }
@@ -66,6 +71,7 @@ public class AuthentificationFilter implements Filter {
                 error.put("status_info", "FORBIDDEN");
                 error.put("timestamp", LocalDateTime.now().toString());
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
+                logs.info("\nWrong login " + "'" + login + "'" + " or password " + "'" + password + "'");
             }
             else moveToMenu(request, response, Role.UNKNOWN);
 
@@ -82,14 +88,15 @@ public class AuthentificationFilter implements Filter {
 
             request.setAttribute("doctors", adminDAO.get().listOfTherapists());
             request.setAttribute("patients", adminDAO.get().listOfPatients());
-
             request.getRequestDispatcher("/WEB-INF/views/admin_menu.jsp").forward(request, response);
+            logs.info("\nADMIN " + request.getSession().getAttribute("login") + " entered the system.");
 
         } else if (role.equals(Role.DOCTOR)) {
             Doctor doctor = adminDAO.get().findDoctorByUsername(login);
             List<Patient> patientList = adminDAO.get().getPatientsOfExactDoctor(doctor.getId());
             request.setAttribute("patients", patientList);
             request.getRequestDispatcher("/WEB-INF/views/doctor_menu.jsp").forward(request, response);
+            logs.info("\nDOCTOR " + request.getSession().getAttribute("login") + " entered the system.");
 
         }
         else if (role.equals(Role.NURSE)) {
@@ -97,6 +104,7 @@ public class AuthentificationFilter implements Filter {
             List<Patient> patientList = adminDAO.get().getPatientsOfExactNurse(nurse.getId());
             request.setAttribute("patients", patientList);
             request.getRequestDispatcher("/WEB-INF/views/nurse_menu.jsp").forward(request, response);
+            logs.info("\nNURSE " + request.getSession().getAttribute("login") + " entered the system.");
 
         } else {
 

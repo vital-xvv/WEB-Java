@@ -10,8 +10,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class AdministratorDAO extends DAO{
+
+    private final Logger logs = Logger.getLogger(AdministratorDAO.class.getName());
 
     private Doctor doctorMapper(ResultSet result){
         Doctor doctor = new Doctor();
@@ -186,6 +189,7 @@ public class AdministratorDAO extends DAO{
             result.next();
             return patientMapper(result);
         } catch (SQLException e) {
+            logs.info("\nPatient with id " + "'" + id + "'" + " is not found");
             throw new RuntimeException(e);
         }
     }
@@ -199,6 +203,7 @@ public class AdministratorDAO extends DAO{
             result.next();
             return doctorMapper(result);
         } catch (SQLException e) {
+            logs.info("\nDoctor profile with username " + "'" + username + "'" + " is not found");
             throw new RuntimeException(e);
         }
     }
@@ -214,6 +219,7 @@ public class AdministratorDAO extends DAO{
             statement.setString(4,operations);
             statement.setInt(5, patientId);
             statement.executeUpdate();
+            logs.info("\nPrescriptions for patient with id " + patientId + " has been updated.");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -227,6 +233,7 @@ public class AdministratorDAO extends DAO{
             statement.setString(2, patient.getLastName());
             statement.setString(3,patient.getDateOfBirth());
             statement.executeUpdate();
+            logs.info("\nPatient "+patient.getFirstName() + " " + patient.getLastName()+" created in database");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -248,6 +255,7 @@ public class AdministratorDAO extends DAO{
             statement2.setInt(1, doctorId);
             statement2.executeUpdate();
             connection.commit();
+            logs.info("\nDoctor with id  "+doctorId + " has been assigned to patient with id " + patientId);
         } catch (SQLException throwables) {
             try {
                 connection.rollback();
@@ -265,6 +273,7 @@ public class AdministratorDAO extends DAO{
             statement.setInt(1, nurseId);
             statement.setInt(2, patientId);
             statement.executeUpdate();
+            logs.info("\nNurse with id  "+nurseId + " has been assigned to patient with id " + patientId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -286,6 +295,8 @@ public class AdministratorDAO extends DAO{
             statement2.setString(3, "DOCTOR");
             statement2.executeUpdate();
             connection.commit();
+            logs.info("\nNew doctor " + doctor.getFirstName() + " " + doctor.getLastName() + " has been created in database with " +
+                    "username: " + doctor.getUsername());
         } catch (SQLException throwables) {
             try {
                 connection.rollback();
@@ -305,6 +316,8 @@ public class AdministratorDAO extends DAO{
             statement.setString(3, nurse.getSpecialization());
             statement.setString(4, nurse.getUsername());
             statement.executeUpdate();
+            logs.info("\nNew nurse " + nurse.getFirstName() + " " + nurse.getLastName() + " has been created in database with " +
+                    "username: " + nurse.getUsername());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -321,6 +334,7 @@ public class AdministratorDAO extends DAO{
             statement.setString(3, "NURSE");
             statement.executeUpdate();
             connection.commit();
+            logs.info("\nUser profile was created for nurse " + nurse.getFirstName() + " " + nurse.getLastName());
         } catch (SQLException throwables) {
             try {
                 connection.rollback();
@@ -339,6 +353,7 @@ public class AdministratorDAO extends DAO{
             statement.setBoolean(1, discharge);
             statement.setInt(2, patientId);
             statement.executeUpdate();
+            logs.info("\nPatient with id " + patientId + " has been discharged from the hospital");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -353,6 +368,7 @@ public class AdministratorDAO extends DAO{
             result.next();
             return nurseMapper(result);
         } catch (SQLException e) {
+            logs.warning("\nUser profile with username " + login + " is not found");
             throw new RuntimeException(e);
         }
     }
